@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+
+# Production build
+out/
+dist/
+
+# Misc
+*.log
+.env*
+!.env.example
+.DS_Store
