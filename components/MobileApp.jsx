@@ -6,6 +6,7 @@ import {
   GraduationCap,
   BookOpen,
   User,
+  FileQuestion,
 } from 'lucide-react';
 import HomeScreen from './screens/HomeScreen';
 import CoursesScreen from './screens/CoursesScreen';
@@ -18,6 +19,7 @@ import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import DailyCheckInPopup from './ui/DailyCheckIn';
 import NotificationScreen from './screens/NotificationScreen';
+import ExamScreen from './screens/ExamScreen';
 
 const ONBOARDING_KEY = 'iedu.onboarded.v1';
 const AUTH_KEY = 'iedu.auth.v1';
@@ -26,6 +28,7 @@ const TABS = [
   { id: 'home', label: 'Home', icon: HomeIcon },
   { id: 'courses', label: 'Courses', icon: GraduationCap },
   { id: 'books', label: 'Books', icon: BookOpen },
+  { id: 'exams', label: 'Exams', icon: FileQuestion },
   { id: 'profile', label: 'Profile', icon: User },
 ];
 
@@ -41,6 +44,7 @@ export default function MobileApp() {
   const [auth, setAuth] = useState(null);
   const [authView, setAuthView] = useState('login'); // 'login' | 'register'
   const [showCheckIn, setShowCheckIn] = useState(false);
+  const [inExam, setInExam] = useState(false);
   const scrollRef = useRef(null);
 
   // Determine onboarding + auth state (client-only, after mount)
@@ -188,6 +192,7 @@ export default function MobileApp() {
               {tab === 'home' && <HomeScreen onNavigate={goTo} onSelectCourse={openCourse} onOpenNotifications={openNotifications} />}
               {tab === 'courses' && <CoursesScreen onSelectCourse={openCourse} onOpenNotifications={openNotifications} />}
               {tab === 'books' && <BooksScreen onOpenNotifications={openNotifications} />}
+              {tab === 'exams' && <ExamScreen onOpenNotifications={openNotifications} setInExam={setInExam} />}
               {tab === 'profile' && <ProfileScreen onReplayOnboarding={replayOnboarding} onLogout={handleLogout} onOpenNotifications={openNotifications} />}
             </>
           )}
@@ -243,7 +248,7 @@ export default function MobileApp() {
         {showCheckIn && <DailyCheckInPopup onClose={() => setShowCheckIn(false)} />}
 
         {/* Bottom navigation (hidden when not logged in) */}
-        {!!auth && (
+        {!!auth && !inExam && (
         <nav className="absolute bottom-0 left-0 right-0 z-20 bg-white/95 backdrop-blur-md border-t border-slate-200 px-2 pt-2 pb-2 bottom-safe">
           <ul className="flex items-end justify-between">
             {TABS.map((t) => {
